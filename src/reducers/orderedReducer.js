@@ -58,13 +58,17 @@ function modifyDoc(collectionState, action) {
   // Support moving a doc within an array
   if (action.payload.ordered) {
     const { newIndex, oldIndex } = action.payload.ordered;
-    // newIndex/oldIndex values exist, item isn't being removed or added, and the index has changed
+
+    // newIndex/oldIndex values exist, item isn't being removed or added, the index has
+    // changed, and the update hasn't already been made in state
     if (
       newIndex !== null &&
       oldIndex !== null &&
       newIndex > -1 &&
       oldIndex > -1 &&
-      newIndex !== oldIndex
+      newIndex !== oldIndex &&
+      newIndex !==
+        collectionState.findIndex(document => document.id === action.meta.doc)
     ) {
       return newArrayWithItemMoved(
         collectionState,
